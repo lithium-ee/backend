@@ -23,24 +23,24 @@ EXPOSE 3000
 CMD [ "npm", "run", "start:dev" ]
 
 
-# Use the official Node.js 14 image as the base image
-FROM node:16-slim as production
+# # Use the official Node.js 14 image as the base image
+# FROM node:16-slim as production
 
-# Set the working directory inside the container
-WORKDIR /
+# # Set the working directory inside the container
+# WORKDIR /
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+# # Copy package.json and package-lock.json to the working directory
+# COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# # Install dependencies
+# RUN npm install
 
-# Copy the rest of the application code to the working directory
-COPY . .
+# # Copy the rest of the application code to the working directory
+# COPY . .
 
-# Expose the port that the Nest.js app will listen on
-EXPOSE 3000
+# # Expose the port that the Nest.js app will listen on
+# EXPOSE 3000
 
-# Start the Nest.js app
-CMD npx typeorm migration:run -d dist/db/dataSourceProd.js && node dist/index.js
+# # Start the Nest.js app
+# CMD npx typeorm migration:run -d dist/db/dataSourceProd.js && node dist/index.js
 

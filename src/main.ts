@@ -4,8 +4,17 @@ import { connectionSource } from './data-source';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+
+    if (process.env.NODE_ENV === 'development') {
+        app.enableCors(); // enable CORS for all hosts in development mode
+    } else {
+        app.enableCors({
+            origin: process.env.CORS_ORIGIN, // get the origin from the environment variable
+        });
+    }
     await app.listen(3000);
 
+    console.log('CORS_ORIGIN', process.env.CORS_ORIGIN);
     connectionSource
         .initialize()
         .then(() => {

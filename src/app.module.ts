@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
             entities: [__dirname + '/**/*.entity{.ts,.js}'], // the path to your entities
             synchronize: false, // whether to automatically create the database schema on every application launch
         }),
+        AuthModule,
     ],
     controllers: [AppController],
     providers: [AppService],
