@@ -165,12 +165,24 @@ export class UsersService {
         return this.usersRepository.findOne({ where: { username } });
     }
 
+    public async findOneById(id: string): Promise<User> {
+        return this.usersRepository.findOne({ where: { id } });
+    }
+
+    public async getAccessToken(userId: string): Promise<string> {
+        const user = await this.usersRepository.findOne({
+            where: { id: userId },
+        });
+
+        return user.accessToken;
+    }
+
     // this fn deletes all users from the database
     public async deleteAll(): Promise<void> {
         await this.usersRepository.delete({});
     }
 
-    private async refreshAccessToken(user: User): Promise<void> {
+    public async refreshAccessToken(user: User): Promise<void> {
         const params = new URLSearchParams();
         params.append('grant_type', 'refresh_token');
         params.append('refresh_token', user.refreshToken);

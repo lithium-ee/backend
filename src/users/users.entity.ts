@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import { Event } from '../events/events.entity';
 
 @Entity('users')
 export class User {
@@ -25,4 +26,7 @@ export class User {
 
     @Column({ nullable: true })
     deviceId: string;
+
+    @OneToOne(() => Event, (event) => event.user) // specify inverse side as a second parameter
+    event: Event;
 }

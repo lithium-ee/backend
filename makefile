@@ -3,7 +3,7 @@ start:
 npm-install:
 	docker exec -it backend-app-1 npm install
 migration-generate:
-	npx typeorm-ts-node-esm migration:generate ./src/migrations/$(name) -d ./src/data-source.ts
+	npx ts-node node_modules/typeorm/cli.js migration:generate src/migrations/$(name) -d src/data-source.ts
 migrate:
 	npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts
 migration-revert:

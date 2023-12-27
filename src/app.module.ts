@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
             synchronize: false, // whether to automatically create the database schema on every application launch
         }),
         AuthModule,
+        EventsModule,
     ],
     controllers: [AppController],
     providers: [AppService],
