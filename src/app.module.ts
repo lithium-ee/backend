@@ -5,6 +5,8 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { EventsModule } from './events/events.module';
+import { EndUserModule } from './end-user/end-user.module';
+import { SongsModule } from './songs/songs.module';
 
 @Module({
     imports: [
@@ -21,6 +23,8 @@ import { EventsModule } from './events/events.module';
         }),
         AuthModule,
         EventsModule,
+        EndUserModule,
+        SongsModule,
     ],
     controllers: [AppController],
     providers: [AppService],

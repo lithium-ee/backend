@@ -10,5 +10,6 @@ import { UsersModule } from '../users/users.module';
     imports: [TypeOrmModule.forFeature([Event]), HttpModule, UsersModule],
     controllers: [EventsController],
     providers: [EventsService],
+    exports: [EventsService],
 })
 export class EventsModule {}

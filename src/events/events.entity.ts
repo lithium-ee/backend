@@ -4,8 +4,10 @@ import {
     PrimaryGeneratedColumn,
     JoinColumn,
     OneToOne,
+    OneToMany,
 } from 'typeorm';
 import { User } from '../users/users.entity';
+import { EndUser } from '../end-user/end-user.entity';
 @Entity('events')
 export class Event {
     @PrimaryGeneratedColumn('uuid')
@@ -26,4 +28,7 @@ export class Event {
     @OneToOne(() => User, (user) => user.event) // specify inverse side as a second parameter
     @JoinColumn()
     user: User;
+
+    @OneToMany(() => EndUser, (endUsers) => endUsers.event)
+    endUsers: EndUser[];
 }

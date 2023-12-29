@@ -20,7 +20,6 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_NAME=postgres
       - JWT_SECRET=secret
-      - CORS_ORIGIN=http://localhost:65060
       - CLIENT_ID=131b8243dedb4e09ab117077d813f760
       - CLIENT_SECRET=d0cc5d2647b54940bc8814675b9460b9
       - FRONTEND_URL=http://localhost:4200

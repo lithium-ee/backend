@@ -1,20 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { connectionSource } from './data-source';
+import { OriginCheckMiddleware } from './middleware/origin-check.middleware';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    if (process.env.NODE_ENV === 'development') {
-        app.enableCors(); // enable CORS for all hosts in development mode
-    } else {
-        app.enableCors({
-            origin: process.env.CORS_ORIGIN, // get the origin from the environment variable
-        });
-    }
+    // app.enableCors({
+    //     origin: process.env.FRONTEND_URL, // get the origin from the environment variable
+    // });
+    app.enableCors();
+
+    app.use(new OriginCheckMiddleware().use);
     await app.listen(3000);
 
-    console.log('CORS_ORIGIN', process.env.CORS_ORIGIN);
+    console.log('FRONTEND_URL', process.env.FRONTEND_URL);
     connectionSource
         .initialize()
         .then(() => {

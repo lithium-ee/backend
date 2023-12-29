@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { HttpService } from '@nestjs/axios';
 import { UsersService } from '../users/users.service';
 import { lastValueFrom } from 'rxjs';
+import { User } from '../users/users.entity';
 
 @Injectable()
 export class EventsService {
@@ -44,13 +45,6 @@ export class EventsService {
             const response = await lastValueFrom(
                 this.httpService.get(url, { headers }),
             );
-            console.log('current queue:');
-            console.log(
-                response.data.queue.map((item: any) => ({
-                    name: item.name,
-                    artists: item.artists.map((artist: any) => artist.name),
-                })),
-            );
 
             return {
                 queue: response.data.queue.map((item: any) => ({
@@ -79,5 +73,18 @@ export class EventsService {
         return this.eventRepository.findOne({
             where: { user: { id: userId } },
         });
+    }
+
+    public async getUserByEventID(eventId: string): Promise<User> {
+        const event = await this.eventRepository.findOne({
+            where: { id: eventId },
+            relations: ['user'],
+        });
+
+        if (!event) {
+            throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
+        }
+
+        return event.user;
     }
 }
