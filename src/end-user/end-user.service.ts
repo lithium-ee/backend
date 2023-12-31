@@ -66,24 +66,15 @@ export class EndUserService {
             );
         }
 
-        const now = new Date();
-        const cooldownStart = endUser.cooldownStart;
-        const cooldown = endUser.event.cooldown; // in millisedonds
-        console.log(cooldown);
+        // calculate the remaining cooldown using enduser.cooldownStart and enduser.cooldownEnd
 
-        if (!cooldownStart) {
-            // this user has not send a song to this event yet
-            return { cooldown: 0 };
-        }
-        // if cooldown is not 0 and cooldownStart is not null
-        // then we need to calculate the remaining cooldown
-        const cooldownEnd = new Date(cooldownStart.getTime() + cooldown);
-        // if cooldownEnd is in the future, then we need to return the remaining cooldown
-        if (cooldownEnd > now) {
-            return { cooldown: cooldownEnd.getTime() - now.getTime() };
-        }
-        // if cooldownEnd is in the past, then we need to return 0
-        return { cooldown: 0 };
+        const cooldown = endUser.cooldownEnd
+            ? endUser.cooldownEnd.getTime() - new Date().getTime()
+            : 0;
+
+        return {
+            cooldown: cooldown,
+        };
     }
 
     public async searchSong(
@@ -140,7 +131,7 @@ export class EndUserService {
 
     public async submitSong(
         submitSongDto: SubmitSongDto,
-    ): Promise<boolean | number> {
+    ): Promise<boolean | { cooldown: number }> {
         const endUser = await this.endUserRepository.findOne({
             where: {
                 id: submitSongDto.userId,
@@ -155,9 +146,10 @@ export class EndUserService {
             submitSongDto.eventId,
             submitSongDto.userId,
         );
+        console.log(coolDown);
 
         if (coolDown.cooldown > 0) {
-            return coolDown.cooldown;
+            return coolDown;
         }
 
         const res = await this.songsService.addSong(
@@ -173,5 +165,24 @@ export class EndUserService {
         } else {
             return false;
         }
+    }
+
+    public async suspendEndUser(songId: string) {
+        const song = await this.songsService.getSong(songId);
+        const endUser = await this.endUserRepository.findOne({
+            where: {
+                id: song.endUser.id,
+            },
+        });
+
+        console.log(endUser);
+        endUser.cooldownStart = new Date();
+        endUser.cooldownEnd = new Date(
+            endUser.cooldownStart.getTime() + 1000 * 60 * 60 * 24,
+        );
+        await this.endUserRepository.save(endUser);
+
+        this.songsService.rejectRequest(songId);
+        return true;
     }
 }

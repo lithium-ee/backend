@@ -11,7 +11,6 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SaveCodeDto } from './dto/save-code.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { SetDeviceDto } from './dto/set-device.dto';
 
 @Controller('users')
 export class UsersController {
@@ -20,11 +19,6 @@ export class UsersController {
     @Post('save-code')
     async saveCode(@Body() saveCodeDto: SaveCodeDto): Promise<boolean> {
         return this.usersService.saveCode(saveCodeDto);
-    }
-    @Post('set-device')
-    @UseGuards(AuthGuard) // this endpoint is protected by the AuthGuard
-    async setDevice(@Body() setDeviceDto: SetDeviceDto, @Request() req) {
-        return this.usersService.setDevice(setDeviceDto.deviceId, req.user.sub);
     }
 
     @Get('active-devices')

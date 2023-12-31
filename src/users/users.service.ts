@@ -224,4 +224,16 @@ export class UsersService {
             );
         }
     }
+
+    public async getEventIdByUserId(userId: string): Promise<string> {
+        const user = await this.usersRepository.findOne({
+            where: { id: userId },
+            relations: ['event'],
+        });
+
+        if (!user) {
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        }
+        return user.event.id;
+    }
 }

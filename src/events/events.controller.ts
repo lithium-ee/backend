@@ -20,12 +20,6 @@ export class EventsController {
         return this.eventsService.create(createEventDto, req.user.sub);
     }
 
-    @Get('queue-and-requests')
-    @UseGuards(AuthGuard)
-    async getQueueAndRequests(@Request() req) {
-        return this.eventsService.getQueueAndRequests(req.user.sub);
-    }
-
     @Get()
     @UseGuards(AuthGuard)
     async find(@Request() req) {

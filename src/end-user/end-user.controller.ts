@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { EndUserService } from './end-user.service';
 import { SubmitSongDto } from './interfaces/submit-song.interface';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('end-user')
 export class EndUserController {
@@ -40,5 +41,11 @@ export class EndUserController {
         @Body() verifyUserDto: { eventId: string; userId: string },
     ) {
         return this.endUserService.verifyEndUserForEvent(verifyUserDto);
+    }
+
+    @Post('suspend-enduser')
+    @UseGuards(AuthGuard)
+    suspendEndUser(@Body() body: { songId: string }) {
+        return this.endUserService.suspendEndUser(body.songId);
     }
 }

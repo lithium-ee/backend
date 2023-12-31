@@ -19,6 +19,9 @@ export class EndUser {
     @Column({ nullable: true })
     cooldownStart: Date;
 
+    @Column({ nullable: true })
+    cooldownEnd: Date;
+
     @OneToMany(() => Song, (song) => song.endUser)
     songs: Song[];
 }

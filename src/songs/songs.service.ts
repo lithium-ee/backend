@@ -22,6 +22,7 @@ export class SongsService {
         if (endUser.event.filterSongs) {
             // add entry to db
             this.songRepository.save({
+                eventId: eventId,
                 title: songDto.name,
                 artists: songDto.artists,
                 spotifyId: songDto.id,
@@ -33,6 +34,7 @@ export class SongsService {
             // add to spotify
             if (await this.addToQueue(songDto.id, eventId)) {
                 this.songRepository.save({
+                    eventId: eventId,
                     title: songDto.name,
                     artists: songDto.artists,
                     spotifyId: songDto.id,
@@ -53,7 +55,7 @@ export class SongsService {
         try {
             const res = await lastValueFrom(
                 this.httpService.post(
-                    `https://api.spotify.com/v1/me/player/queue?uri=spotify%3Atrack%3A${songId}?device_id=${user.deviceId}`,
+                    `https://api.spotify.com/v1/me/player/queue?uri=spotify%3Atrack%3A${songId}`,
                     {},
                     {
                         headers: {
@@ -62,7 +64,7 @@ export class SongsService {
                     },
                 ),
             );
-
+            console.log(res);
             return true;
         } catch (error) {
             if (error.response && error.response.status === 401 && retry) {
@@ -73,5 +75,64 @@ export class SongsService {
                 return false;
             }
         }
+    }
+
+    public async getLogsAndRequests(userId: string) {
+        const eventId = await this.usersService.getEventIdByUserId(userId);
+
+        const songs = await this.songRepository.find({
+            where: { eventId: eventId },
+            order: { timestamp: 'DESC' },
+        });
+
+        // we need to return an object { logs: [], requests: [] }
+        const logs = songs.filter((song) => song.pushedToSpotify);
+        const requests = songs.filter((song) => !song.pushedToSpotify);
+
+        return { logs, requests };
+    }
+
+    public async acceptRequest(userId: string, songId: string) {
+        // get the song from the db
+        const song = await this.songRepository.findOne({
+            where: { id: songId },
+        });
+        console.log(song);
+        // verify that song exists and hasnt been added to spotify
+        if (!song || song.pushedToSpotify) {
+            return false;
+        }
+
+        if (await this.addToQueue(song.spotifyId, song.eventId)) {
+            // update the song in the db
+            song.pushedToSpotify = true;
+            this.songRepository.save(song);
+            return true;
+        } else {
+            // error
+            return false;
+        }
+    }
+
+    public async rejectRequest(songId: string) {
+        // get the song from the db
+        const song = await this.songRepository.findOne({
+            where: { id: songId },
+        });
+        // verify that song exists and hasnt been added to spotify
+        if (!song || song.pushedToSpotify) {
+            return false;
+        }
+
+        // delete the song from the db
+        this.songRepository.delete(songId);
+        return true;
+    }
+
+    public async getSong(songId: string) {
+        return await this.songRepository.findOne({
+            where: { id: songId },
+            relations: ['endUser'],
+        });
     }
 }
