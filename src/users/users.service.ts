@@ -87,6 +87,7 @@ export class UsersService {
 
             return true; // return true if the operation was successful
         } catch (error) {
+            console.log(error)
             return false; // return false if an error occurred
         }
     }
