@@ -41,6 +41,9 @@ COPY . .
 # Expose the port that the Nest.js app will listen on
 EXPOSE 3000
 
+# Build the Nest.js application in production mode
+RUN npm run build
+
 # Start the Nest.js app
 CMD npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts && node dist/main.js
 
