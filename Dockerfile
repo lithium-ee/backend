@@ -42,5 +42,5 @@ COPY . .
 EXPOSE 3000
 
 # Start the Nest.js app
-CMD npx typeorm migration:run -d dist/db/dataSourceProd.js && node dist/index.js
+CMD npx typeorm migration:run -d src/data-source.ts && node dist/index.js
 
