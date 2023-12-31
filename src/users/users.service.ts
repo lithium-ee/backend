@@ -54,7 +54,7 @@ export class UsersService {
             params.append('code', saveCodeDto.code);
             params.append(
                 'redirect_uri',
-                process.env.FRONTEND_URL + '/set-up/step-two-redirected',
+                process.env.FRONTEND_URL + '/#/set-up/step-two-redirected',
             );
             const res = await lastValueFrom(
                 this.httpService
