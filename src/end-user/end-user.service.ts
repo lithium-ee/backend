@@ -22,10 +22,12 @@ export class EndUserService {
     public async createNewEndUserForEvent(
         eventId: string,
     ): Promise<{ endUserId: string }> {
+        console.log('here');
         const newEndUser = await this.endUserRepository.create({
             event: { id: eventId },
         });
         const res = await this.endUserRepository.save(newEndUser);
+        console.log(res);
         return {
             endUserId: res.id,
         };
@@ -82,10 +84,11 @@ export class EndUserService {
         query: string,
         retry = true,
     ): Promise<any> {
-        // get the events auth token
-        const user = await this.eventsService.getUserByEventID(eventId);
+        // validate that the event exists
+        await this.eventsService.findEventById(eventId);
+
+        const user = await this.usersService.getAdminUser();
         try {
-            console.log(query);
             const response = await lastValueFrom(
                 this.httpService.get('https://api.spotify.com/v1/search', {
                     params: {
@@ -147,7 +150,6 @@ export class EndUserService {
             submitSongDto.eventId,
             submitSongDto.userId,
         );
-        console.log(coolDown);
 
         if (coolDown.cooldown > 0) {
             return coolDown;
@@ -187,7 +189,6 @@ export class EndUserService {
             },
         });
 
-        console.log(endUser);
         endUser.cooldownStart = new Date();
         endUser.cooldownEnd = new Date(
             endUser.cooldownStart.getTime() + 1000 * 60 * 60 * 24,

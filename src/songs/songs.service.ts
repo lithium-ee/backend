@@ -97,7 +97,6 @@ export class SongsService {
         const song = await this.songRepository.findOne({
             where: { id: songId },
         });
-        console.log(song);
         // verify that song exists and hasnt been added to spotify
         if (!song || song.pushedToSpotify) {
             return false;

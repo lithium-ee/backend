@@ -14,7 +14,6 @@ async function bootstrap() {
     app.use(new OriginCheckMiddleware().use);
     await app.listen(3000);
 
-    console.log('FRONTEND_URL', process.env.FRONTEND_URL);
     connectionSource
         .initialize()
         .then(() => {

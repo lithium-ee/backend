@@ -178,6 +178,10 @@ export class UsersService {
         return user.accessToken;
     }
 
+    public async getAdminUser(): Promise<User> {
+        return this.usersRepository.findOne({ where: { isAdmin: true } });
+    }
+
     // this fn deletes all users from the database
     public async deleteAll(): Promise<void> {
         await this.usersRepository.delete({});

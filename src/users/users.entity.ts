@@ -27,6 +27,9 @@ export class User {
     @Column({ nullable: true })
     deviceId: string;
 
+    @Column({ default: false })
+    isAdmin: boolean;
+
     @OneToOne(() => Event, (event) => event.user) // specify inverse side as a second parameter
     event: Event;
 }

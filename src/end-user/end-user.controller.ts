@@ -25,6 +25,7 @@ export class EndUserController {
 
     @Get()
     createNewEndUserForEvent(@Query('eventId') eventId: string) {
+        console.log('arrived here');
         return this.endUserService.createNewEndUserForEvent(eventId);
     }
 
