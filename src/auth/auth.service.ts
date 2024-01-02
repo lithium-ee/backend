@@ -48,8 +48,10 @@ export class AuthService {
         const user = await this.usersService.findOneByEmail(payload.email);
 
         if (user && user.id === payload.sub) {
+            console.log('here');
             return true;
         } else {
+            console.log('didnt allow');
             return false;
         }
     }

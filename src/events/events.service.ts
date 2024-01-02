@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { HttpService } from '@nestjs/axios';
 import { UsersService } from '../users/users.service';
-import { lastValueFrom } from 'rxjs';
 import { User } from '../users/users.entity';
 
 @Injectable()
@@ -53,5 +52,17 @@ export class EventsService {
         }
 
         return event.user;
+    }
+
+    public async getCooldown(eventId: string): Promise<number> {
+        const event = await this.eventRepository.findOne({
+            where: { id: eventId },
+        });
+
+        if (!event) {
+            throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
+        }
+
+        return event.cooldown;
     }
 }

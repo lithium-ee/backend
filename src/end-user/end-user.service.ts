@@ -159,9 +159,20 @@ export class EndUserService {
             endUser,
         );
 
+        // get the event cooldown
+
+        const eventCooldown = await this.eventsService.getCooldown(
+            submitSongDto.eventId,
+        );
+
         if (res) {
-            endUser.cooldownStart = new Date();
-            await this.endUserRepository.save(endUser);
+            if (eventCooldown) {
+                endUser.cooldownStart = new Date();
+                endUser.cooldownEnd = new Date(
+                    endUser.cooldownStart.getTime() + eventCooldown,
+                );
+                await this.endUserRepository.save(endUser);
+            }
             return true;
         } else {
             return false;
