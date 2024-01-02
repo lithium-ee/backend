@@ -16,7 +16,7 @@ export class Event {
     @Column()
     name: string;
 
-    @Column({ type: 'json' })
+    @Column({ type: 'json', nullable: true })
     device: { id: string; name: string };
 
     @Column()
