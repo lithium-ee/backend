@@ -54,7 +54,7 @@ export class UsersService {
             params.append('code', saveCodeDto.code);
             params.append(
                 'redirect_uri',
-                process.env.FRONTEND_URL + '/#/set-up/step-two-redirected',
+                process.env.FRONTEND_URL + '/set-up/step-two-redirected',
             );
             const res = await lastValueFrom(
                 this.httpService
@@ -87,7 +87,7 @@ export class UsersService {
 
             return true; // return true if the operation was successful
         } catch (error) {
-            console.log(error)
+            console.log(error);
             return false; // return false if an error occurred
         }
     }

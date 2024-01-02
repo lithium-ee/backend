@@ -121,7 +121,7 @@ export class EndUserService {
                 return await this.searchSong(eventId, query, false);
             } else {
                 // Some other error occurred
-                console.log(error)
+                console.log(error);
                 throw new HttpException(
                     'An error occurred while fetching active devices',
                     HttpStatus.INTERNAL_SERVER_ERROR,
