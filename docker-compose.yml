@@ -11,19 +11,8 @@ services:
     command: npm run start:dev
     ports:
       - 3000:3000
-    environment:
-      - DOCKER=true
-      - NODE_ENV=development
-      - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
-      - POSTGRES_USERNAME=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=postgres
-      - JWT_SECRET=secret
-      - CLIENT_ID=131b8243dedb4e09ab117077d813f760
-      - CLIENT_SECRET=d0cc5d2647b54940bc8814675b9460b9
-      - FRONTEND_URL=http://localhost:4200
-      - CLIENT_URL=http://localhost:57215
+    evn_file:
+      .gitignore
     depends_on:
       - db
   db:
